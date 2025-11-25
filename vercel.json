@@ -29,6 +29,26 @@
       "dest": "/api/applications.js"
     },
     {
+      "src": "/api/applications/first-interview",
+      "dest": "/api/applications/first-interview.js"
+    },
+    {
+      "src": "/api/applications/final-interview",
+      "dest": "/api/applications/final-interview.js"
+    },
+    {
+      "src": "/api/applications/rejected",
+      "dest": "/api/applications/rejected.js"
+    },
+    {
+      "src": "/api/applications/selected",
+      "dest": "/api/applications/selected.js"
+    },
+    {
+      "src": "/api/applications/hired",
+      "dest": "/api/applications/hired.js"
+    },
+    {
       "src": "/api/applications/interview",
       "dest": "/api/applications/interview.js"
     },

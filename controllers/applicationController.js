@@ -14,7 +14,13 @@ async function getApplicationsRecordsFromNotion(pageSize = 20, startCursor = nul
   try {
     const queryParams = {
       database_id: applicationDatabaseId,
-      page_size: pageSize
+      page_size: pageSize,
+      sorts: [
+        {
+          timestamp: 'created_time',
+          direction: 'descending'
+        }
+      ]
     };
 
     // Add start_cursor for pagination (if provided)
@@ -62,7 +68,13 @@ async function getApplicationsRecordsFromNotion(pageSize = 20, startCursor = nul
       };
 
       const requestBody = {
-        page_size: pageSize
+        page_size: pageSize,
+        sorts: [
+          {
+            timestamp: 'created_time',
+            direction: 'descending'
+          }
+        ]
       };
 
       if (startCursor) {
@@ -329,7 +341,13 @@ async function getAllRecordsByStatus(statusFilter) {
     while (hasMore) {
       const queryParams = {
         database_id: applicationDatabaseId,
-        page_size: 100 // Max allowed by Notion API
+        page_size: 100, // Max allowed by Notion API
+        sorts: [
+          {
+            timestamp: 'created_time',
+            direction: 'descending'
+          }
+        ]
       };
 
       // Add cursor for pagination

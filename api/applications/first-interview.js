@@ -35,7 +35,13 @@ module.exports = async (req, res) => {
     while (hasMore) {
       const queryParams = {
         database_id: applicationDatabaseId,
-        page_size: 100 // Max allowed by Notion API
+        page_size: 100, // Max allowed by Notion API
+        sorts: [
+          {
+            timestamp: 'created_time',
+            direction: 'descending'
+          }
+        ]
       };
 
       // Add cursor for pagination

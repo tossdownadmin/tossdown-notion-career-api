@@ -5,6 +5,9 @@ const applicationController = require("../controllers/applicationController");
 // GET /api/applications (with optional id query parameter)
 router.get('/', applicationController.getApplications);
 
+// GET /api/applications/get-single - Get single application by ID
+router.get('/get-single', applicationController.getSingleApplication);
+
 // GET /api/applications/first-interview - Get all First Interview applications
 router.get('/first-interview', applicationController.getFirstInterviewApplications);
 

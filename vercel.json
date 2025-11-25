@@ -23,10 +23,17 @@
       "src": "/api/career/debug-properties",
       "dest": "/api/career/debug-properties.js"
     },
-     
+    {
+      "src": "/api/application-detail",
+      "dest": "/api/application-detail.js"
+    },
     {
       "src": "/api/applications",
       "dest": "/api/applications.js"
+    },
+    {
+      "src": "/api/applications/get-single",
+      "dest": "/api/applications/get-single.js"
     },
     {
       "src": "/api/applications/first-interview",

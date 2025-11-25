@@ -6,6 +6,8 @@ const notion = new Client({
   auth: process.env.NOTION_TOKEN || 'ntn_q88942775343WsZKAfos9DYmAhODSKSPmPmc19L6Xhc7L1',
 });
 
+
+
 const applicationDatabaseId = process.env.APPLICATION_DATABASE_ID || '1d921223-e79e-8164-8cd4-fa013f4dd093';
 
 // Function to get paginated application records from Notion

@@ -252,3 +252,169 @@ exports.updateStatus = async (req, res) => {
   }
 };
 
+// Function to get ALL records for a specific status (no pagination)
+async function getAllRecordsByStatus(statusFilter) {
+  try {
+    let allResults = [];
+    let hasMore = true;
+    let startCursor = null;
+
+    console.log(`Fetching ALL records for status: ${statusFilter}`);
+
+    // Keep fetching until we have all records
+    while (hasMore) {
+      const queryParams = {
+        database_id: applicationDatabaseId,
+        page_size: 100 // Max allowed by Notion API
+      };
+
+      // Add cursor for pagination
+      if (startCursor) {
+        queryParams.start_cursor = startCursor;
+      }
+
+      // Add status filter
+      queryParams.filter = {
+        property: 'Applicant Status',
+        rich_text: {
+          contains: statusFilter
+        }
+      };
+
+      const response = await notion.databases.query(queryParams);
+
+      if (response && response.results) {
+        allResults = allResults.concat(response.results);
+        hasMore = response.has_more;
+        startCursor = response.next_cursor;
+
+        console.log(`Fetched ${response.results.length} records. Total so far: ${allResults.length}. Has more: ${hasMore}`);
+      } else {
+        hasMore = false;
+      }
+    }
+
+    console.log(`Total records fetched for "${statusFilter}": ${allResults.length}`);
+    return allResults;
+
+  } catch (error) {
+    console.error(`Error fetching all records for status "${statusFilter}":`, error);
+    throw error;
+  }
+}
+
+// Get all "First Interview" applications
+exports.getFirstInterviewApplications = async (req, res) => {
+  try {
+    console.log('=== GET First Interview Applications ===');
+
+    const results = await getAllRecordsByStatus('First Interview');
+
+    res.status(200).json({
+      success: true,
+      data: results,
+      count: results.length,
+      status: 'First Interview'
+    });
+  } catch (error) {
+    console.error('Error in getFirstInterviewApplications:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch First Interview applications',
+      error: error.message
+    });
+  }
+};
+
+// Get all "Final Interview" applications
+exports.getFinalInterviewApplications = async (req, res) => {
+  try {
+    console.log('=== GET Final Interview Applications ===');
+
+    const results = await getAllRecordsByStatus('Final Interview');
+
+    res.status(200).json({
+      success: true,
+      data: results,
+      count: results.length,
+      status: 'Final Interview'
+    });
+  } catch (error) {
+    console.error('Error in getFinalInterviewApplications:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch Final Interview applications',
+      error: error.message
+    });
+  }
+};
+
+// Get all "Rejected" applications
+exports.getRejectedApplications = async (req, res) => {
+  try {
+    console.log('=== GET Rejected Applications ===');
+
+    const results = await getAllRecordsByStatus('Rejected');
+
+    res.status(200).json({
+      success: true,
+      data: results,
+      count: results.length,
+      status: 'Rejected'
+    });
+  } catch (error) {
+    console.error('Error in getRejectedApplications:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch Rejected applications',
+      error: error.message
+    });
+  }
+};
+
+// Get all "Selected" applications
+exports.getSelectedApplications = async (req, res) => {
+  try {
+    console.log('=== GET Selected Applications ===');
+
+    const results = await getAllRecordsByStatus('Selected');
+
+    res.status(200).json({
+      success: true,
+      data: results,
+      count: results.length,
+      status: 'Selected'
+    });
+  } catch (error) {
+    console.error('Error in getSelectedApplications:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch Selected applications',
+      error: error.message
+    });
+  }
+};
+
+// Get all "Hired" applications
+exports.getHiredApplications = async (req, res) => {
+  try {
+    console.log('=== GET Hired Applications ===');
+
+    const results = await getAllRecordsByStatus('Hired');
+
+    res.status(200).json({
+      success: true,
+      data: results,
+      count: results.length,
+      status: 'Hired'
+    });
+  } catch (error) {
+    console.error('Error in getHiredApplications:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch Hired applications',
+      error: error.message
+    });
+  }
+};
+

@@ -10,7 +10,7 @@ const applicationDatabaseId =
 
 
 // Function to get paginated application records from Notion
-async function getApplicationsRecordsFromNotion(pageSize = 20, startCursor = null) {
+async function getApplicationsRecordsFromNotion(pageSize = 20, startCursor = null, statusFilter = null) {
   try {
     const queryParams = {
       database_id: applicationDatabaseId,
@@ -22,7 +22,17 @@ async function getApplicationsRecordsFromNotion(pageSize = 20, startCursor = nul
       queryParams.start_cursor = startCursor;
     }
 
-    console.log('Query params:', queryParams);
+    // Add status filter if provided
+    if (statusFilter) {
+      queryParams.filter = {
+        property: 'Applicant Status',
+        rich_text: {
+          contains: statusFilter
+        }
+      };
+    }
+
+    console.log('Query params:', JSON.stringify(queryParams, null, 2));
 
     const response = await notion.databases.query(queryParams);
 
@@ -57,6 +67,16 @@ async function getApplicationsRecordsFromNotion(pageSize = 20, startCursor = nul
 
       if (startCursor) {
         requestBody.start_cursor = startCursor;
+      }
+
+      // Add status filter if provided
+      if (statusFilter) {
+        requestBody.filter = {
+          property: 'Applicant Status',
+          rich_text: {
+            contains: statusFilter
+          }
+        };
       }
 
       const response = await axios.post(url, requestBody, { headers });
@@ -98,12 +118,14 @@ exports.getApplications = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const cursor = req.query.cursor || null;
+    const status = req.query.status || null;
 
     console.log('=== Get Applications API Debug ===');
     console.log('Requested ID:', requestedId);
     console.log('Page:', page);
     console.log('Limit:', limit);
     console.log('Cursor:', cursor);
+    console.log('Status Filter:', status);
 
     // Validate limit (max 100 as per Notion API)
     if (limit > 100) {
@@ -130,8 +152,8 @@ exports.getApplications = async (req, res) => {
       });
     }
 
-    // Get paginated records
-    const pageData = await getApplicationsRecordsFromNotion(limit, cursor);
+    // Get paginated records with optional status filter
+    const pageData = await getApplicationsRecordsFromNotion(limit, cursor, status);
 
     if (pageData.error) {
       return res.status(500).json({ success: false, message: pageData.error });
